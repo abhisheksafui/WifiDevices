@@ -13,7 +13,7 @@ run, the device boots in Access Point mode, allowing Android devices to connect 
 it using default password of 85128512 and configure wifi router ssid and password.
 
 After this device reboots in Station mode and tries to connect to configured 
-wifi router and hecne should be availble to Android app connected to wifi router. 
+wifi router and hence should be available to Android app connected to wifi router. 
 
 
 Device can again be forced to open Access Point on pressing button connected to
@@ -21,6 +21,10 @@ GPIO0. GPIO0 toggles wifi state of the device between Station mode and Access Po
 Mode.
 
 
-NOTE: If devices are not visible in app even after proper configuration of wifi
+NOTE: Due to Android NsdManager issue, after a change in wifi connection state app
+      takes some time to discover devices this can be fastened by closing the app and
+      opening again. 
+
+      If devices are not visible in app even after proper configuration of wifi
       SSID and Password, just close the app from the navigation drawer exit button
       and relaunch the app. If still problem persits configuration is not ok. 
