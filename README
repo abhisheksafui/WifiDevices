@@ -23,7 +23,7 @@ Mode.
 Libraries Required:
 https://github.com/me-no-dev/ESPAsyncUDP.git
 https://github.com/bblanchon/ArduinoJson.git
-
+https://github.com/abhisheksafui/ArduinoList.git
 
 KNOWN BUG: 
       Due to Android NsdManager issue, after a change in wifi connection state app
