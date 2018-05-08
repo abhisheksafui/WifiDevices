@@ -189,7 +189,7 @@ class Timer: public IotService {
 
     void decrementMinute() {
 
-      if (minutes < 0) {
+      if (minutes < 0) {  
         decrementHour();
       }
 

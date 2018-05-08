@@ -20,10 +20,15 @@ Device can again be forced to open Access Point on pressing button connected to
 GPIO0. GPIO0 toggles wifi state of the device between Station mode and Access Point
 Mode.
 
+Libraries Required:
+https://github.com/me-no-dev/ESPAsyncUDP.git
+https://github.com/bblanchon/ArduinoJson.git
 
-NOTE: Due to Android NsdManager issue, after a change in wifi connection state app
+
+KNOWN BUG: 
+      Due to Android NsdManager issue, after a change in wifi connection state app
       takes some time to discover devices this can be fastened by closing the app and
-      opening again. 
+      opening again. NsdManager will be replaced by  jmdns to solve the issue.
 
       If devices are not visible in app even after proper configuration of wifi
       SSID and Password, just close the app from the navigation drawer exit button

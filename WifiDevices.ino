@@ -1,5 +1,4 @@
 
-  
 /**
 *    WiFi Devices, firmware for connecting devices to already available 
 *		android applicaion.
@@ -34,6 +33,7 @@
 
 #include "Switch.h"
 #include "Time.h"
+
 /**
  *  Global variables
  */
@@ -43,6 +43,8 @@ WiFiEventHandler onConnectHandler;
 WiFiEventHandler onDisconnectHandler;
 
 AsyncUDP udp;
+
+
 
 LED system_led(2,ACTIVE_LOW);
 
@@ -114,7 +116,7 @@ void setup() {
   iotSwitch2 = std::make_shared<IotSwitch> (12, ACTIVE_HIGH,5,ActiveMode::ACTIVE_LOW,  "SW2");
 
   iotSwitch1->initIotSwitch();
-  iotSwitch2->initIotSwitch();
+//  iotSwitch2->initIotSwitch();
   
   /* Setup Wifi based on configuration */
   wifiInit(DeviceSettings::instance());
@@ -147,8 +149,10 @@ void loop() {
     system_led.ON();
   }
 
+  
   Timer::update();
   Switch::update();
+  IotService::update(udp);
   
   ArduinoOTA.handle();
 }
