@@ -7,6 +7,7 @@
 
 /**
      WiFi Devices, firmware for connecting devices to already available
+     
 		android applicaion.
 
      Copyright (C) 2018  Abhishek Safui

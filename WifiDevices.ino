@@ -116,7 +116,7 @@ void setup() {
   iotSwitch2 = std::make_shared<IotSwitch> (12, ACTIVE_HIGH,5,ActiveMode::ACTIVE_LOW,  "SW2");
 
   iotSwitch1->initIotSwitch();
-//  iotSwitch2->initIotSwitch();
+  iotSwitch2->initIotSwitch();
   
   /* Setup Wifi based on configuration */
   wifiInit(DeviceSettings::instance());
