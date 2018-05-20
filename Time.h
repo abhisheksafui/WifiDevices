@@ -24,8 +24,6 @@
 
 #include "IotService.h"
 
-#define MAX_TIMERS 2
-
 
 enum class TimerState {
   RUNNING,
@@ -34,9 +32,7 @@ enum class TimerState {
 
 class Timer: public IotService {
 
-
-    static Timer* timer_list[MAX_TIMERS];
-    static uint8_t timer_count;
+    static ArduinoList<Timer*> timer_list;
     static int update_ts_ms;
 
     /**
@@ -64,10 +60,8 @@ class Timer: public IotService {
 
     Timer(String& name) : IotService(name, "TIMER")
     {
-      if (timer_count >= MAX_TIMERS)
-        return;
 
-      timer_list[timer_count++] = this;
+      timer_list.push_back(this);
       _state = TimerState::STOPPED;
     }
 
@@ -75,8 +69,8 @@ class Timer: public IotService {
        Function to load all timer's states sequentially.
     */
     static void init() {
-      for (int i = 0; i < timer_count; i++) {
-        timer_list[i]->initTimer();
+      for (auto it = timer_list.begin(); it != timer_list.end(); it++) {
+        (*it)->initTimer();
       }
     }
 
@@ -231,13 +225,13 @@ class Timer: public IotService {
         */
         update_ts_ms = millis();
 
-        for (int i = 0; i < timer_count; i++) {
+        for (auto it = timer_list.begin(); it!= timer_list.end(); it++) {
 
-          if (timer_list[i]->state() == TimerState::RUNNING) {
+          if ((*it)->state() == TimerState::RUNNING) {
 
             /* Decrement Second and check if timer has popped */
-            timer_list[i]->decrementSecond();
-            timer_list[i]->check();
+            (*it)->decrementSecond();
+            (*it)->check();
           }
 
         }
@@ -385,8 +379,7 @@ class Timer: public IotService {
     }
 };
 
-Timer*  Timer::timer_list[MAX_TIMERS];
-uint8_t Timer::timer_count = 0;
+ArduinoList<Timer*>  Timer::timer_list;
 int     Timer::update_ts_ms = 0;
 
 #endif

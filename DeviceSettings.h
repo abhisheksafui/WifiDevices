@@ -270,7 +270,7 @@ public:
   }
 
 
-  static const String& getWifiMode(){
+  static const String getWifiMode(){
     if(instance()){
       return instance()->getMode();
     }else{

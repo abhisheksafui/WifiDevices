@@ -1,6 +1,4 @@
 
-
-
 /*
  * Class representing notification from Device.
  * Other devices may register for Device Notification.

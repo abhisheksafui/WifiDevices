@@ -66,24 +66,15 @@ class IotService {
 
   public:
 
-    IotService(String name, String&& type): _type(type), _name(name)  {
 
-      /**
-         Add pointer to self to static array;
-      */
-      iotServiceArray[iotServiceCount++] = this;
-
+    IotService(String name, String type): _type(type), _name(name) {
+      iotServices.push_back(this);
     }
 
-    IotService(char *name, char *type): _type(type), _name(name) {
-
-      /**
-         Add pointer to self to static array;
-      */
-      iotServiceArray[iotServiceCount++] = this;
-
+    ~IotService(){
+      iotServices.remove(this);
     }
-
+    
     String& getType() {
       return _type;
     }
@@ -160,10 +151,11 @@ class IotService {
         /** Create the service array **/
         JsonArray& serviceArray = reply.createNestedArray(SERVICE_ARRAY);
 
-        for (int i = 0; i < iotServiceCount; i++)
+        for(auto it = iotServices.begin(); it != iotServices.end(); it++)
         {
-          iotServiceArray[i]->appendService(serviceArray);
+          (*it)->appendService(serviceArray);
         }
+        
         reply.printTo(buffer, sizeof(buffer));
         DEBUG.print("Replying message: "); DEBUG.println(buffer);
         packet.write((const uint8_t *)buffer, strlen(buffer));
@@ -178,12 +170,12 @@ class IotService {
 
         for (auto item : reqArray)
         {
-          for (int i = 0; i < iotServiceCount; i++)
+          for(auto it = iotServices.begin(); it != iotServices.end(); it++)
           {
-            if (!strcmp(item[SERVICE_NAME], iotServiceArray[i]->getName().c_str()) &&
-                !strcmp(item[SERVICE_TYPE], iotServiceArray[i]->getType().c_str()))
+            if (!strcmp(item[SERVICE_NAME], (*it)->getName().c_str()) &&
+                !strcmp(item[SERVICE_TYPE], (*it)->getType().c_str()))
             {
-              iotServiceArray[i]->appendServiceState(serviceArray);
+              (*it)->appendServiceState(serviceArray);
             }
           }
         }
@@ -196,19 +188,19 @@ class IotService {
         reply[MESSAGE_TYPE_TAG] = MESSAGE_TYPE_SET_RESPONSE;
 
         /** Get the array of services to respond to **/
+        //DEBUG.print("State = "); DEBUG.println(state);
         JsonArray& reqArray = root[SERVICE_ARRAY];
         JsonArray& serviceArray = reply.createNestedArray(SERVICE_ARRAY);
 
         for (auto item : reqArray)
         {
-          for (int i = 0; i < iotServiceCount; i++)
+          for(auto it = iotServices.begin(); it != iotServices.end(); it++)
           {
-            if (!strcmp(item[SERVICE_NAME], iotServiceArray[i]->getName().c_str()) &&
-                !strcmp(item[SERVICE_TYPE], iotServiceArray[i]->getType().c_str()))
+            if (!strcmp(item[SERVICE_NAME], (*it)->getName().c_str()) &&
+                !strcmp(item[SERVICE_TYPE], (*it)->getType().c_str()))
             {
-              //String state = item[SERVICE_STATE];
-              iotServiceArray[i]->setState(item);
-              iotServiceArray[i]->appendServiceState(serviceArray);
+              (*it)->setState(item);
+              (*it)->appendServiceState(serviceArray);
             }
           }
         }
@@ -289,7 +281,8 @@ class IotService {
     static const uint32_t MAX_REPLY_LENGTH = 1024;
     static const uint32_t MAX_IOT_SERVICES = 20;
 
-    static IotService * iotServiceArray[MAX_IOT_SERVICES];
+    static ArduinoList<IotService *> iotServices;
+
     static String hostname;
     static uint32_t iotServiceCount;
 
@@ -300,8 +293,7 @@ class IotService {
     String _name;
 };
 
-uint32_t IotService::iotServiceCount = 0;
-IotService *IotService::iotServiceArray[MAX_IOT_SERVICES];
+ArduinoList<IotService *> IotService::iotServices;
 String IotService::hostname;
 ArduinoList<std::shared_ptr<Notification>> IotService::notificationList;
 ArduinoList<std::shared_ptr<NotificationListener>> IotService::notificationListenerList;

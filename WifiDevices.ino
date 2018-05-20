@@ -1,4 +1,6 @@
 
+
+
 /**
 *    WiFi Devices, firmware for connecting devices to already available 
 *		android applicaion.
@@ -18,7 +20,7 @@
 *    You should have received a copy of the GNU General Public License
 *    along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
-
+#include <ArduinoSwitch.h>
 #include <FS.h>
 #include<ESP8266WiFi.h>
 #include <ArduinoOTA.h>
@@ -30,8 +32,6 @@
 #include <ESPAsyncUDP.h>
 #include "IotSwitch.h"
 #include "DeviceSettings.h"
-
-#include "Switch.h"
 #include "Time.h"
 
 /**
@@ -79,7 +79,7 @@ void wifiModeSwitchPressCallback(void *){
 /**
  * Switch used to toggle between AP and STA modes
  */
-Switch wifiModeControlSwitch(0,ActiveMode::ACTIVE_LOW,wifiModeSwitchPressCallback);
+ArduinoSwitch wifiModeControlSwitch(0,ActiveMode::ACTIVE_LOW,wifiModeSwitchPressCallback);
 
 /**
  *  Setup function
@@ -91,6 +91,8 @@ void setup() {
 
   DEBUG.println("\n\n\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n");
   DEBUG.println("Esp8266 Application booting..");
+
+  ArduinoSwitch::init(&DEBUG);
 
   /* Read Configuration Second */
   spiffsInit();
@@ -151,7 +153,7 @@ void loop() {
 
   
   Timer::update();
-  Switch::update();
+  ArduinoSwitch::update();
   IotService::update(udp);
   
   ArduinoOTA.handle();
